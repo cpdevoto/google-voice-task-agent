@@ -53,7 +53,7 @@ google-voice-task-agent/
 ### 1. Clone the repo & create a virtual environment
 
 ```powershell
-git clone https://github.com/yourusername/google-voice-task-agent.git
+git clone https://github.com/cpdevoto/google-voice-task-agent.git
 cd google-voice-task-agent
 python -m venv .venv
 .venv\Scripts\Activate.ps1
