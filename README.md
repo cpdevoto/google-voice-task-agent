@@ -164,3 +164,4 @@ MIT
 
 - In VS Code press **Ctrl+Shift+P => "Tasks: Run Task" => "Dev: Start (Flask + ngrok)"**. This opens two terminals: one for Flask and one for ngrok.
 - To trigger the test call anytime, run **Ctrl+Shift+P => "Tasks: Run Task" => "Call Me Now"** and paste your `/call` URL (Must use the ngrok URL with `/call` appended to it).
+- Test with the following tasks "Email Sara, review PR, book dentist"

@@ -27,6 +27,26 @@
       "command": "Invoke-WebRequest -Uri \"${input:callUrl}\" -Method POST",
       "problemMatcher": [],
       "presentation": { "reveal": "always", "panel": "dedicated" }
+    },
+    {
+      "label": "Deploy to Cloud Run",
+      "type": "shell",
+      "command": "C:\\Program Files\\PowerShell\\7\\pwsh.exe",
+      "args": [
+        "-NoProfile",
+        "-ExecutionPolicy",
+        "Bypass",
+        "-File",
+        ".\\deploy.ps1",
+        "-EnvFile",
+        ".\\.env"
+        // "-DryRun"
+      ],
+      "group": {
+        "kind": "build",
+        "isDefault": true
+      },
+      "problemMatcher": []
     }
   ],
   "inputs": [

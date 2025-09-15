@@ -10,7 +10,9 @@ __pycache__/
 
 # Environment variables
 .env
+.yaml
 
 # Google secrets
 secrets/google/credentials.json
 secrets/google/token.json
+
