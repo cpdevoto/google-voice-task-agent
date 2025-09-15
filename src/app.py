@@ -2,9 +2,15 @@ import os
 from flask import Flask, request, Response, jsonify
 from twilio.twiml.voice_response import VoiceResponse, Gather
 from dotenv import load_dotenv
+from src.tools.google_tasks import create_task
 
 load_dotenv()
 app = Flask(__name__)
+
+
+def _split_items(s: str):
+    raw = [x.strip(" .;-") for x in s.replace("\n", ",").split(",")]
+    return [x for x in raw if x and len(x) > 1]
 
 
 @app.get("/")
@@ -34,9 +40,20 @@ def voice():
 @app.post("/capture")
 def capture():
     transcript = request.form.get("SpeechResult", "") or ""
-    print(f"[Twilio Transcript] {transcript}")
+    items = _split_items(transcript)
+    made = 0
+    for t in items:
+        try:
+            create_task(title=t)
+            made += 1
+        except Exception as e:
+            print("Create failed:", t, e)
+
     vr = VoiceResponse()
-    vr.say("Got it. I recorded your list. Goodbye.")
+    if made:
+        vr.say(f"I captured {made} task{'s' if made != 1 else ''}. Goodbye.")
+    else:
+        vr.say("I couldn't capture any tasks. Goodbye.")
     return Response(str(vr), mimetype="application/xml")
 
 
