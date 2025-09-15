@@ -1,0 +1,40 @@
+{
+  "version": "2.0.0",
+  "tasks": [
+    {
+      "label": "Flask: run",
+      "type": "shell",
+      "command": "${workspaceFolder}\\.venv\\Scripts\\python.exe",
+      "args": ["-m", "flask", "--app", "src.app", "run", "-p", "5000"],
+      "problemMatcher": []
+    },
+    {
+      "label": "ngrok: http 5000",
+      "type": "shell",
+      "command": "ngrok http 5000",
+      "options": { "cwd": "${workspaceFolder}" },
+      "problemMatcher": [],
+      "presentation": { "reveal": "always", "panel": "dedicated" }
+    },
+    {
+      "label": "Dev: Start (Flask + ngrok)",
+      "dependsOn": ["Flask: run", "ngrok: http 5000"],
+      "dependsOrder": "parallel"
+    },
+    {
+      "label": "Call Me Now",
+      "type": "shell",
+      "command": "Invoke-WebRequest -Uri \"${input:callUrl}\" -Method POST",
+      "problemMatcher": [],
+      "presentation": { "reveal": "always", "panel": "dedicated" }
+    }
+  ],
+  "inputs": [
+    {
+      "id": "callUrl",
+      "type": "promptString",
+      "description": "Cloud Run or ngrok URL for /call (e.g., https://abc123.ngrok.io/call)",
+      "default": "http://localhost:5000/call"
+    }
+  ]
+}

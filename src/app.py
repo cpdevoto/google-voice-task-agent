@@ -1,0 +1,59 @@
+import os
+from flask import Flask, request, Response, jsonify
+from twilio.twiml.voice_response import VoiceResponse, Gather
+from dotenv import load_dotenv
+
+load_dotenv()
+app = Flask(__name__)
+
+
+@app.get("/")
+def health():
+    return "OK", 200
+
+
+@app.route("/voice", methods=["GET", "POST"])
+def voice():
+    vr = VoiceResponse()
+    g = Gather(
+        input="speech",
+        language="en-US",
+        speech_timeout="auto",
+        action="/capture",
+        method="POST",
+    )
+    g.say(
+        "Good morning. What are your tasks for today? \
+            Speak them as a list, pausing between items."
+    )
+    vr.append(g)
+    vr.say("I didn't catch that. We'll try again later. Goodbye.")
+    return Response(str(vr), mimetype="application/xml")
+
+
+@app.post("/capture")
+def capture():
+    transcript = request.form.get("SpeechResult", "") or ""
+    print(f"[Twilio Transcript] {transcript}")
+    vr = VoiceResponse()
+    vr.say("Got it. I recorded your list. Goodbye.")
+    return Response(str(vr), mimetype="application/xml")
+
+
+@app.post("/call")
+def call_me_now():
+    # Quick manual trigger to make Twilio ring you
+    from twilio.rest import Client
+
+    sid = os.environ["TWILIO_ACCOUNT_SID"]
+    tok = os.environ["TWILIO_AUTH_TOKEN"]
+    tw_from = os.environ["TWILIO_NUMBER"]
+    you = os.environ["YOUR_NUMBER"]
+    client = Client(sid, tok)
+    call = client.calls.create(
+        to=you,
+        from_=tw_from,
+        url=f"{request.url_root.strip('/')}/voice",
+        method="POST"
+    )
+    return jsonify({"status": "started", "sid": call.sid})

@@ -1,0 +1,16 @@
+# Python
+__pycache__/
+*.pyc
+*.pyo
+*.pyd
+*.sqlite3
+
+# Virtual environment
+.venv/
+
+# Environment variables
+.env
+
+# Google secrets
+secrets/google/credentials.json
+secrets/google/token.json
