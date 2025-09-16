@@ -23,8 +23,13 @@
     },
     {
       "label": "Call Me Now",
-      "type": "shell",
-      "command": "Invoke-WebRequest -Uri \"${input:callUrl}\" -Method POST",
+      "type": "process",
+      "command": "C:\\Program Files\\PowerShell\\7\\pwsh.exe",
+      "args": [
+        "-NoProfile",
+        "-Command",
+        "$envVars = Get-Content .env | Where-Object {$_ -match '=' -and ($_ -notmatch '^#') } | ForEach-Object { ($k,$v) = $_ -split '=',2; Set-Item -Path env:$k -Value $v.Trim() }; Invoke-WebRequest -Uri \"${input:callUrl}\" -Method POST -Headers @{ 'X-Trigger-Token' = $env:CALL_TRIGGER_TOKEN } -UseBasicParsing"
+      ],
       "problemMatcher": [],
       "presentation": { "reveal": "always", "panel": "dedicated" }
     },

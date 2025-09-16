@@ -9,6 +9,7 @@ Param(
   [string]$TwilioAuthToken = "",
   [string]$TwilioNumber = "",
   [string]$YourNumber = "",
+  [string]$CallTriggerToken = "",
   [string]$TimeZone = "America/Detroit",
   [string]$EnvFile = "",
   [switch]$DryRun
@@ -128,6 +129,7 @@ if ($EnvFile) {
   if ($TwilioAuthToken)  { $pairs += "TWILIO_AUTH_TOKEN=$TwilioAuthToken" }
   if ($TwilioNumber)     { $pairs += "TWILIO_NUMBER=$TwilioNumber" }
   if ($YourNumber)       { $pairs += "YOUR_NUMBER=$YourNumber" }
+  if ($CallTriggerToken) { $pairs += "CALL_TRIGGER_TOKEN=$CallTriggerToken" }
   if ($pairs.Count -gt 0) {
     $setEnvTokens = @("--set-env-vars", ($pairs -join ","))
   }

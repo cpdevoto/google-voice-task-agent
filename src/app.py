@@ -13,6 +13,16 @@ def _split_items(s: str):
     return [x for x in raw if x and len(x) > 1]
 
 
+TOKEN = os.getenv("CALL_TRIGGER_TOKEN", "")
+
+
+def _authorized(req) -> bool:
+    # accept either header or query param
+    hdr = req.headers.get("X-Trigger-Token", "")
+    qp = req.args.get("token", "")
+    return (hdr and hdr == TOKEN) or (qp and qp == TOKEN)
+
+
 @app.get("/")
 def health():
     return "OK", 200
@@ -59,6 +69,9 @@ def capture():
 
 @app.post("/call")
 def call_me_now():
+    if TOKEN and not _authorized(request):
+        return jsonify({"error": "unauthorized"}), 401
+
     # Quick manual trigger to make Twilio ring you
     from twilio.rest import Client
 
